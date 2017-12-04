@@ -14,10 +14,10 @@ export const addMember = (member) => {
   return action;
 }
 
-export const deleteMember = (member) => {
+export const deleteMember = (memberID) => {
   const action = {
     type: DELETE_MEMBER,
-    member
+    memberID
   }
   console.log('delete in actions', action);
   return action;

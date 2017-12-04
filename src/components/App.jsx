@@ -8,6 +8,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import ContentDelete from 'material-ui/svg-icons/content/remove';
 import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 
@@ -30,9 +31,10 @@ class App extends Component {
     this.handleClose();
   }
 
-  deleteCurrentMember(member){
+  deleteCurrentMember(memberID){
     // let members = this.convertToArray(this.props.family);
-    this.props.deleteMember(member);
+    this.props.deleteMember(memberID);
+    console.log('delete member id of' , memberID);
   }
 
 
@@ -154,8 +156,14 @@ renderAddModal(parentOfChild) {
         this.setState({parent: parentOfChild});
         let id = Math.random();
         this.setState({id: id});
-      }} className="add-modal-button">
+      }} className="modal-button add-modal-button ">
          <ContentAdd className="add-modal-button-sign"/>
+      </FloatingActionButton>
+
+      <FloatingActionButton mini={true} onClick={()=>{
+        this.deleteCurrentMember(parentOfChild)
+      }} className="modal-button add-modal-button">
+         <ContentDelete className="add-modal-button-sign"/>
       </FloatingActionButton>
 
       <Dialog

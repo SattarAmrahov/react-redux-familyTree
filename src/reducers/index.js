@@ -1,4 +1,5 @@
 import { ADD_MEMBER, DELETE_MEMBER } from '../constants';
+import React from 'react';
 
 
 
@@ -10,19 +11,80 @@ const initialState = [{
   avatar: 'http://www.imas.utas.edu.au/_media/utas-shared/UTAS-Default-Profile-Pic.png'
 }];
 
+const findAndRemove = (array, property, value) => {
+  array.forEach(function(result, index) {
+    if(result[property] === value) {
+      //Remove from array
+      array.splice(index, 1);
+    }
+  });
+}
 
-const removeById = (allMembers, member, parent) => {
 
-  // const familyMembers = action.members.filter(member => member.id !== action.id);
-  // console.log('new reduce members', familyMembers);
-  // return familyMembers;
-  console.log("member and parent", member, parent);
-  var index = Object.keys(allMembers).indexOf('id': parent);
-  console.log('index',index);
+const removeById = (members, memberID) => {
+  let familyMember = [];
+  let newMember = {};
+  if (typeof(members) === 'object') {
+
+          members.map(member => {
+              //
+              // newMember = {
+              //   name: member.name,
+              //   age: member.age,
+              //   id: member.id,
+              //   avatar: member.avatar,
+              //   parent: member.parent
+              // }
+
+              if ('children' in member) {
+                let newChildren = [];
+                let deleting = false;
+
+                for (var i = 0; i < member.children.length; i++) {
+                  if (member.children[i].id == memberID) {
+                    deleting = true;
+                  }
+                }
+
+                if (deleting == true) {
+                  findAndRemove(member.children, 'id', memberID);
+                }
+                if ('children' in member) {
+                  if (member.children.length > 0) {
+                    for (var i = 0; i < member.children.length; i++) {
+                      removeById(member.children[i], memberID)
+                    }
+                  }
+                }
+
+              } else {
+                newMember = {
+                  name: member.name,
+                  age: member.age,
+                  id: member.id,
+                  avatar: member.avatar,
+                  parent: member.parent
+                }
+                familyMember.push(newMember);
+              }
+
+          })
+
+    }
+
+
+  return familyMember
+
+  }
+
+const removeMember = (members, memberID) => {
+  let newMembers = {};
+    console.log(members);
+  return ( removeById(members, memberID))
+
+
 
 };
-
-
 
 const members = (state = initialState, action) => {
   let familyMembers = null;
@@ -39,14 +101,11 @@ const members = (state = initialState, action) => {
       return familyMembers;
 
     case DELETE_MEMBER:
-      const newState = Object.assign([], state);
-      const indexOfMemberToDelete = state.findIndex(member => {
-        return member.id == action.member.id
-      })
-      newState.splice(indexOfMemberToDelete, 1);
+      familyMembers = removeMember(state, action.memberID);
+      console.log('action.memberID',action.memberID);
 
-      return newState;
 
+      return familyMembers; // change state tp familyMembers
     default:
       return state;
   }

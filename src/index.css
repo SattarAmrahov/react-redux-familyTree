@@ -155,3 +155,6 @@ right connector from last child*/
 .add-member-form .form-input input[type=text]:not(.browser-default):focus:not([readonly]){
   box-shadow: none;
 }
+.modal-button {
+  margin: auto 2px;
+}
